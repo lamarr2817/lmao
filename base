@@ -13,12 +13,13 @@ Lamarr's Magnificent API Overhaul
 
 ]]--
 
+lmao_loaded = true
 local lmao = {
 
 name = "LMAO",
 register = "$~",
 font = draw.CreateFont("Tahoma", 16),
-version = 1,
+version = 2,
 git_source = "https://raw.githubusercontent.com/lamarr2817/lmao/master/base",
 git_version = "https://raw.githubusercontent.com/lamarr2817/lmao/master/version"
 }
@@ -98,7 +99,7 @@ function lmao.update()
 		local current_script = file.Open(GetScriptName(), "w")
 		current_script:Write(http.Get(lmao.git_source))
 		current_script:Close()
-		lmao.log("Please re-load your script")
+		gui.Command("lua.run " .. GetScriptName())
 	else
 		lmao.log("Script is up-to-date")
 	end
