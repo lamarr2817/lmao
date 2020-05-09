@@ -1,0 +1,134 @@
+--[[
+
+ /$$           /$$      /$$      /$$$$$$       /$$$$$$ 
+| $$          | $$$    /$$$     /$$__  $$     /$$__  $$
+| $$          | $$$$  /$$$$    | $$  \ $$    | $$  \ $$
+| $$          | $$ $$/$$ $$    | $$$$$$$$    | $$  | $$
+| $$          | $$  $$$| $$    | $$__  $$    | $$  | $$
+| $$          | $$\  $ | $$    | $$  | $$    | $$  | $$
+| $$$$$$$$ /$$| $$ \/  | $$ /$$| $$  | $$ /$$|  $$$$$$/
+|________/|__/|__/     |__/|__/|__/  |__/|__/ \______/ 
+
+Lamarr's Magnificent API Overhaul
+
+]]--
+
+--			|||||||||||||||||||||||||||||||||| Start of Logic ||||||||||||||||||||||||||||||||||
+
+local lmao = {
+
+name = "LMAO",
+register = "$",
+font = draw.CreateFont("Tahoma", 16),
+version = 1,
+git_source = 
+git_
+}
+
+--			|||||||||||||||||||||||||||||||||| End of Logic ||||||||||||||||||||||||||||||||||
+
+--			|||||||||||||||||||||||||||||||||| Start of Rendering ||||||||||||||||||||||||||||||||||
+
+function lmao.draw_gradient(x1, y1, x2, y2, color, dir) -- FUCK THIS MATH THIS TOOK ENTIRELY TOO LONG
+local w = x2 - x1
+local h = y2 - y1
+
+	if dir < 3 then -- will change to "up" "down" "left" "right" when i figure out how to uhhh
+		for i = 0, w do
+			local a = (i / w) * 255
+			draw.Color(color[1], color[2], color[3], a)
+			if dir == 1 then
+				draw.FilledRect(x1 + w - i, y1, x1 + w - i + 1, y1 + h)
+			elseif dir == 2 then
+				draw.FilledRect(x1 + i, y1, x1 + i + 1, y1 + h)
+			end
+		
+		end
+	elseif dir <= 4 then
+		for i = 0, h do
+			local a = (i / h) * 255
+			draw.Color(color[1], color[2], color[3], a)
+			if dir == 3 then
+				draw.FilledRect(x1, y1 + h - i, x1 + w, y1 + h - i + 1)
+			elseif dir == 4 then
+				draw.FilledRect(x1, y1 + i, x1 + w, y1 + i + 1)
+			end
+			
+		end
+	else
+	lmao.log("Invalid direction", "GRADIENT")
+	end
+end
+
+function lmao.draw_rect(x1, y1, x2, y2, color, outline) -- proud of this, very simple big brain
+    draw.Color(color[1], color[2], color[3], color[4])
+	if outline then 
+	    draw.OutlinedRect(x1, y1, x2, y2)
+	else
+		draw.FilledRect(x1, y1, x2, y2)
+	end
+end
+
+function lmao.draw_text(x, y, color, text, font, shadow)
+	draw.Color(color[1], color[2], color[3], color[4])
+    if (font ~= nil) then
+        draw.SetFont(font)
+	else
+		draw.SetFont(lmao.font)
+	end
+	if (shadow ~= nil) then
+		draw.TextShadow(x, y, text)
+	else
+		draw.Text(x, y, text)
+	end
+end
+
+--			|||||||||||||||||||||||||||||||||| End of Rendering ||||||||||||||||||||||||||||||||||
+
+--			|||||||||||||||||||||||||||||||||| Start of Utility ||||||||||||||||||||||||||||||||||
+
+function lmao.log(info, error)
+	if error ~= nil then
+		return print("[ERROR] [" .. string.upper(error) .."] " .. info)
+	else
+		return print("[" .. lmao.register .. "] " .. info)
+	end
+end
+
+function lmao.update()
+
+	if tonumber(http.Get("https://raw.githubusercontent.com/lamarr2817/predgaclient/master/version.txt")) > lmao.version then
+		lmao.log("Update Started")
+		local current_script = file.Open(GetScriptName(), "w")
+		current_script:Write(http.Get("https://raw.githubusercontent.com/lamarr2817/predgaclient/master/client"))
+		current_script:Close()
+		lmao.log("Please re-load Predga")
+	else
+		lmao.log("Predga is up-to-date")
+	end
+end
+
+--			|||||||||||||||||||||||||||||||||| End of Utility ||||||||||||||||||||||||||||||||||
+
+callbacks.Register("Draw", function()
+local scrW, scrH = draw.GetScreenSize()
+local color = {
+
+white = {255, 255, 255, 255},
+black = {0, 0, 0, 255},
+red = {255, 0, 0, 255},
+orange = {255, 135, 0, 255},
+yellow = {255, 255, 0, 255},
+green = {0, 255, 0, 255},
+blue = {0, 0, 255, 255},
+indigo = {0, 175, 255, 255},
+violet = {180, 0, 180, 255},
+rainbow = {math.sin((globals.RealTime() / 5) * 4) * 127 + 128, math.sin((globals.RealTime() / 5) * 4 + 2) * 127 + 128, math.sin((globals.RealTime() / 5) * 4 + 4) * 127 + 128, 255} 
+-- not worth all the extra space of adding HSV to color functions so you get macaroni rainbow for now
+}
+
+lmao.draw_text(500, 500, color.rainbow, "Wow", _, true)
+lmao.draw_rect(150, 150, 300, 190, color.rainbow)
+lmao.draw_gradient(0, 0, scrW, 15, color.rainbow, 3)
+
+end)
