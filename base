@@ -13,19 +13,15 @@ Lamarr's Magnificent API Overhaul
 
 ]]--
 
---			|||||||||||||||||||||||||||||||||| Start of Logic ||||||||||||||||||||||||||||||||||
-
 local lmao = {
 
 name = "LMAO",
-register = "$",
+register = "$~",
 font = draw.CreateFont("Tahoma", 16),
 version = 1,
-git_source = 
-git_
+git_source = "https://raw.githubusercontent.com/lamarr2817/lmao/master/base",
+git_version = "https://raw.githubusercontent.com/lamarr2817/lmao/master/version"
 }
-
---			|||||||||||||||||||||||||||||||||| End of Logic ||||||||||||||||||||||||||||||||||
 
 --			|||||||||||||||||||||||||||||||||| Start of Rendering ||||||||||||||||||||||||||||||||||
 
@@ -87,48 +83,25 @@ end
 
 --			|||||||||||||||||||||||||||||||||| Start of Utility ||||||||||||||||||||||||||||||||||
 
-function lmao.log(info, error)
-	if error ~= nil then
-		return print("[ERROR] [" .. string.upper(error) .."] " .. info)
-	else
-		return print("[" .. lmao.register .. "] " .. info)
-	end
+function lmao.log(text, err)
+
+    if not err then
+        print(lmao.register .. " " .. text)
+    else
+        print(lmao.register .. " [ERROR] " .. text)
+    end
 end
 
 function lmao.update()
-
-	if tonumber(http.Get("https://raw.githubusercontent.com/lamarr2817/predgaclient/master/version.txt")) > lmao.version then
+	if tonumber(http.Get(lmao.git_version)) > lmao.version then
 		lmao.log("Update Started")
 		local current_script = file.Open(GetScriptName(), "w")
-		current_script:Write(http.Get("https://raw.githubusercontent.com/lamarr2817/predgaclient/master/client"))
+		current_script:Write(http.Get(lmao.git_source))
 		current_script:Close()
-		lmao.log("Please re-load Predga")
+		lmao.log("Please re-load your script")
 	else
-		lmao.log("Predga is up-to-date")
+		lmao.log("Script is up-to-date")
 	end
 end
 
 --			|||||||||||||||||||||||||||||||||| End of Utility ||||||||||||||||||||||||||||||||||
-
-callbacks.Register("Draw", function()
-local scrW, scrH = draw.GetScreenSize()
-local color = {
-
-white = {255, 255, 255, 255},
-black = {0, 0, 0, 255},
-red = {255, 0, 0, 255},
-orange = {255, 135, 0, 255},
-yellow = {255, 255, 0, 255},
-green = {0, 255, 0, 255},
-blue = {0, 0, 255, 255},
-indigo = {0, 175, 255, 255},
-violet = {180, 0, 180, 255},
-rainbow = {math.sin((globals.RealTime() / 5) * 4) * 127 + 128, math.sin((globals.RealTime() / 5) * 4 + 2) * 127 + 128, math.sin((globals.RealTime() / 5) * 4 + 4) * 127 + 128, 255} 
--- not worth all the extra space of adding HSV to color functions so you get macaroni rainbow for now
-}
-
-lmao.draw_text(500, 500, color.rainbow, "Wow", _, true)
-lmao.draw_rect(150, 150, 300, 190, color.rainbow)
-lmao.draw_gradient(0, 0, scrW, 15, color.rainbow, 3)
-
-end)
